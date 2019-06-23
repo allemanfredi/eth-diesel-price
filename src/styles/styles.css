@@ -1,0 +1,69 @@
+.fs-40{
+    font-size:40px;
+}
+.fs-30{
+    font-size:30px;
+}
+.fs-20{
+    font-size:20px;
+}
+
+.fw-bold{
+    font-weight: bold;
+}
+
+.mt-100{
+    margin-top: 100px;
+}
+
+
+.card {
+  /* Add shadows to create the "card" effect */
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+}
+
+.btn-red {
+    color: #fff;
+    background-color: #FFD800;
+    border-color: #FFD800;
+    height: 50px;
+    width: 150px;
+}
+  
+
+ /*LOADER */
+.container-max{
+    width:100%;
+}
+.lds-hourglass {
+    display: inline-block;
+    position: relative;
+    width: 64px;
+    height: 64px;
+}
+.lds-hourglass:after {
+    content: " ";
+    display: block;
+    border-radius: 50%;
+    width: 0;
+    height: 0;
+    margin: 6px;
+    box-sizing: border-box;
+    border: 26px solid #FFD800;
+    border-color: #FFD800 transparent #FFD800 transparent;
+    animation: lds-hourglass 1.2s infinite;
+}
+@keyframes lds-hourglass {
+    0% {
+      transform: rotate(0);
+      animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    }
+    50% {
+      transform: rotate(900deg);
+      animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+    100% {
+      transform: rotate(1800deg);
+    }
+}
