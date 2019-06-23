@@ -32,6 +32,10 @@ class Content extends Component {
                                 {!this.props.isLoading ? <button onClick={() => this.props.onClick()} className="btn btn-red fw-bold">Get price</button> : <Loader/> }
                             </div>
 
+                            <div className="mt-1">
+                                {this.props.log}
+                            </div>
+
                             {this.props.error ? <Alert error={this.props.error}/> : '' }
 
                         </div>

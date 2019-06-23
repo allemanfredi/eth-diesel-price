@@ -39,7 +39,8 @@ class App extends Component{
       
       this.setState({
         isLoading : true,
-        error : false
+        error : false,
+        log : false
       });
 
       //query oraclize
@@ -55,12 +56,14 @@ class App extends Component{
 
   registerListenerUpdatePrice(){
     EventEmitter.on('price', price => this.updatePrice(price));
+    EventEmitter.on('log', log =>  console.log(log));
     EventEmitter.on('error', error => console.log(error));
   }
 
   updatePrice(price){
     this.setState({
       price,
+      log : false,
       isLoading : false
     });
   }
@@ -68,6 +71,7 @@ class App extends Component{
   render(){
     return(
       <Content  price={this.state.price} 
+                log={this.state.log}
                 isLoading={this.state.isLoading} 
                 error={this.state.error} 
                 onClick={this.startUpdatePrice}/>

@@ -46,7 +46,7 @@ class DieselPrice {
     }
 
     update() {
-        
+
         try{
             this.dieselPriceContract.methods.update().send({
                 from: this.currentAccount,
@@ -59,10 +59,20 @@ class DieselPrice {
     }
 
     registerEventsListener() {
+        
+        //log event handler
+        this.dieselPriceContract.events.LogNewOraclizeQuery()
+        .on('data', (e) => {
+            console.log("log");
+            EventEmitter.emit('log' , e.returnValues.description);
+        })
+        .on('error', error => this.emit('error' , error));
 
-        this.dieselPriceContract.events.LogNewDieselPrice()
-        .on('data', (event) => {
-            EventEmitter.emit('price' , event.returnValues.price);
+        //price event handler
+        this.dieselPriceContract.events.LogNewDieselPrice({fromBlock: 0 , toBlock: 'latest'})
+        .on('data', (e) => {
+            console.log("price");
+            EventEmitter.emit('price' , e.returnValues.price);
         })
         .on('error', error => this.emit('error' , error));
     }
