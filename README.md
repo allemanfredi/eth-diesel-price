@@ -1,6 +1,11 @@
 # eth-diesel-price
 eth-diesel-price allows you to receive the price of the diesel using oraclize
 
+You can access the app at the following [link](http://ethdieselprice.s3-website-us-east-1.amazonaws.com/).
+
+It is necessary to set the kovan testnet on metamask.
+
+
 ### Installing
 
 ```

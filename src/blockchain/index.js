@@ -82,7 +82,7 @@ class DieselPrice {
                         date : new Date(block.timestamp * 1000)
                     })
                 }
-                //"break" not intentionally set so that a price event log is generated
+                //"break" not intentionally set so that a price event log is generated as well
 
             }
         })
