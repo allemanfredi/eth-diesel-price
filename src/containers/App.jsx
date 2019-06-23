@@ -35,29 +35,20 @@ class App extends Component{
 
   async startUpdatePrice(){
     
-    try{
-      
-      this.setState({
-        isLoading : true,
-        error : false,
-        log : false
-      });
+    this.setState({
+      isLoading : true,
+      error : false,
+      log : false
+    });
 
-      //query oraclize
-      this.dieselPrice.update();
-
-    }catch(err){
-      this.setState({
-        isLoading:false,
-        error: err.message
-      });
-    }
+    //query oraclize
+    this.dieselPrice.update();
   }
 
   registerListenerUpdatePrice(){
     EventEmitter.on('price', price => this.updatePrice(price));
-    EventEmitter.on('log', log =>  console.log(log));
-    EventEmitter.on('error', error => console.log(error));
+    EventEmitter.on('log', log =>  this.setState({log}));
+    EventEmitter.on('error', error => this.setState({error , isLoading:false}));
   }
 
   updatePrice(price){
