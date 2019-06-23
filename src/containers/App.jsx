@@ -19,7 +19,8 @@ class App extends Component{
     this.state = {
       isLoading : false,
       error : false,
-      price : false
+      prices : [],
+      logs : []
     }
   }
 
@@ -47,22 +48,23 @@ class App extends Component{
 
   registerListenerUpdatePrice(){
     EventEmitter.on('price', price => this.updatePrice(price));
-    EventEmitter.on('log', log =>  this.setState({log}));
+    EventEmitter.on('log', log =>  this.setState(prevState => { return {logs : [...prevState.logs , log]}}));
     EventEmitter.on('error', error => this.setState({error , isLoading:false}));
   }
 
   updatePrice(price){
-    this.setState({
-      price,
-      log : false,
-      isLoading : false
+    this.setState(prevState => {
+      return {
+        prices : [...prevState.prices, price],
+        isLoading : false
+      }
     });
   }
 
   render(){
     return(
-      <Content  price={this.state.price} 
-                log={this.state.log}
+      <Content  prices={this.state.prices} 
+                logs={this.state.logs}
                 isLoading={this.state.isLoading} 
                 error={this.state.error} 
                 onClick={this.startUpdatePrice}/>

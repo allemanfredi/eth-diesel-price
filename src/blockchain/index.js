@@ -36,7 +36,7 @@ class DieselPrice {
             this.dieselPriceContract = new this.web3.eth.Contract(DieselPriceContract.abi,this.contractAddress, {
                 defaultAccount: this.currentAccount, // default from address
             });
-
+            
             //event listeners
             this.registerEventsListener();
 
@@ -49,13 +49,13 @@ class DieselPrice {
 
         try{
 
-            //gas estimation
-            const gas = await this.dieselPriceContract.methods.update().estimateGas();
+            //gas estimation...sometimes metamask generates an exception in calculating the estimated gas
+            //const gas = await this.dieselPriceContract.methods.update().estimateGas();
 
             await this.dieselPriceContract.methods.update().send({
                 from: this.currentAccount,
-                value: this.web3.utils.toWei('0.0035', 'ether'), 
-                gas
+                value: this.web3.utils.toWei('0.0045', 'ether'), 
+                //gas
             });
         }catch(err){
             EventEmitter.emit('error',err.message);
@@ -66,12 +66,33 @@ class DieselPrice {
         
         //log event handler
         this.dieselPriceContract.events.LogNewOraclizeQuery()
-        .on('data', (e) => EventEmitter.emit('log' , e.returnValues.description))
+        .on('data', async e => {
+            
+            const block = await this.web3.eth.getBlock(e.blockNumber);
+
+            EventEmitter.emit('log' , {
+                value : e.returnValues[0],
+                date : new Date(block.timestamp * 1000)
+            })
+        })
         .on('error', error => this.emit('error' , error));
 
         //price event handler
-        this.dieselPriceContract.events.LogNewDieselPrice({fromBlock: 0 , toBlock: 'latest'})
-        .on('data', (e) => EventEmitter.emit('price' , e.returnValues.price))
+        this.dieselPriceContract.events.LogNewDieselPrice()
+        .on('data', async e => {
+
+            const block = await this.web3.eth.getBlock(e.blockNumber);
+
+            EventEmitter.emit('price' , {
+                price : parseFloat(e.returnValues.price),
+                date : new Date(block.timestamp * 1000)
+            });
+            
+            EventEmitter.emit('log' , {
+                value : e.returnValues[0],
+                date : new Date(block.timestamp * 1000)
+            })
+        })
         .on('error', error => this.emit('error' , error));
     }
 

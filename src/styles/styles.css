@@ -16,21 +16,33 @@
     margin-top: 100px;
 }
 
+.container-events-log{
+    background: #f6f6f6;
+    max-height: 184px;
+    overflow-y: auto;
+}
 
 .card {
-  /* Add shadows to create the "card" effect */
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   transition: 0.3s;
 }
 
-.btn-red {
+.btn-yellow {
     color: #fff;
     background-color: #FFD800;
     border-color: #FFD800;
     height: 50px;
-    width: 150px;
+    width: 210px;
 }
-  
+.btn-yellow:hover {
+    transform: scale(1.05)
+}
+
+.container-log {
+    max-height: 200px;
+    overflow-y: auto;
+    background: #f6f6f6;
+} 
 
  /*LOADER */
 .container-max{
