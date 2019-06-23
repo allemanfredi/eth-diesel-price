@@ -64,36 +64,28 @@ class DieselPrice {
 
     registerEventsListener() {
         
-        //log event handler
-        this.dieselPriceContract.events.LogNewOraclizeQuery()
-        .on('data', async e => {
-            
-            const block = await this.web3.eth.getBlock(e.blockNumber);
-
-            EventEmitter.emit('log' , {
-                value : e.returnValues[0],
-                date : new Date(block.timestamp * 1000)
-            })
-        })
-        .on('error', error => this.emit('error' , error));
-
-        //price event handler
-        this.dieselPriceContract.events.LogNewDieselPrice()
+        this.dieselPriceContract.events.allEvents()
         .on('data', async e => {
 
             const block = await this.web3.eth.getBlock(e.blockNumber);
 
-            EventEmitter.emit('price' , {
-                price : parseFloat(e.returnValues.price),
-                date : new Date(block.timestamp * 1000)
-            });
-            
-            EventEmitter.emit('log' , {
-                value : e.returnValues[0],
-                date : new Date(block.timestamp * 1000)
-            })
+            switch(e.event){
+                case 'LogNewDieselPrice' : {
+                    EventEmitter.emit('price' , {
+                        price : parseFloat(e.returnValues.price),
+                        date : new Date(block.timestamp * 1000)
+                    });
+                }
+                default : {
+                    EventEmitter.emit('log' , {
+                        value : e.returnValues[0],
+                        date : new Date(block.timestamp * 1000)
+                    })
+                }
+                //"break" not intentionally set so that a price event log is generated
+
+            }
         })
-        .on('error', error => this.emit('error' , error));
     }
 
 }
