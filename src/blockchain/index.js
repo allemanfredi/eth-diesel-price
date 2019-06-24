@@ -27,6 +27,7 @@ class DieselPrice {
                 await window.ethereum.enable();
             } else {
                 EventEmitter.emit('error',' Install Metamask');
+                return;
             }
 
             //get the current account address
