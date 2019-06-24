@@ -79,7 +79,7 @@ class DieselPrice {
 
                     const price = {
                         price : parseFloat(e.returnValues.price),
-                        date : new Date(block.timestamp * 1000)  
+                        date : Date(block.timestamp * 1000).toString()
                     }
                     EventEmitter.emit('prices' , [price]);
                     
@@ -89,7 +89,7 @@ class DieselPrice {
                 default : {
                     EventEmitter.emit('log' , {
                         value : e.returnValues[0],
-                        date : new Date(block.timestamp * 1000)
+                        date : Date(block.timestamp * 1000).toString()
                     })
                 }
                 //"break" not intentionally set so that a price event log is generated as well

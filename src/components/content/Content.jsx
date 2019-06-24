@@ -35,7 +35,7 @@ class Content extends Component {
                                     Last update:
                                 </div>
                                 <div className="col-12 col-sm-9 text-center text-sm-right fw-bold">
-                                    {this.props.prices[this.props.prices.length - 1] ? this.props.prices[this.props.prices.length - 1].date.toString() : '-' } 
+                                    {this.props.prices[this.props.prices.length - 1] ? this.props.prices[this.props.prices.length - 1].date : '-' } 
                                 </div>
                             </div>
 
