@@ -60,7 +60,7 @@ class DieselPrice {
 
             await this.dieselPriceContract.methods.update().send({
                 from: this.currentAccount,
-                value: this.web3.utils.toWei('0.0045', 'ether'), 
+                value: this.web3.utils.toWei('0.004', 'ether')  //200,000 gas * 20 Gwei = 4,000,000 Gwei = 0.004 ETH
                 //gas
             });
         }catch(err){

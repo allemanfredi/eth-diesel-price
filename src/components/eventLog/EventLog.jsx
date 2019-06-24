@@ -7,7 +7,7 @@ function EventLog(props){
        <div className="container container-events-log">
            {props.logs.map( (log, index) => {
                return (
-                   <div key={log.date.toString()} className="row">
+                   <div key={log.date.toString() + log.value.toString()} className="row">
                        <div className="col-12 text-left fs-12">
                             [ {convertDate(props.logs[props.logs.length-1-index].date)} ] {props.logs[props.logs.length-1-index].value}
                         </div>
