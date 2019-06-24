@@ -1,5 +1,6 @@
 import  Web3 from 'web3';
 import { EventEmitter } from '../utils/EventEmitter';
+import StorageService from '../utils/StorageService';
 
 //dieselPrice contract interface built with truffle
 import DieselPriceContract from './build/contracts/DieselPrice';
@@ -40,6 +41,10 @@ class DieselPrice {
             //event listeners
             this.registerEventsListener();
 
+            const prices = StorageService.getAllPrices();
+            if ( prices.length > 0 )
+                EventEmitter.emit('prices', prices);
+
         }catch(err){
             EventEmitter.emit('error',err.message);
         }
@@ -71,11 +76,15 @@ class DieselPrice {
 
             switch(e.event){
                 case 'LogNewDieselPrice' : {
-                    EventEmitter.emit('price' , {
+
+                    const price = {
                         price : parseFloat(e.returnValues.price),
-                        date : new Date(block.timestamp * 1000)
-                    });
+                        date : new Date(block.timestamp * 1000)  
+                    }
+                    EventEmitter.emit('prices' , [price]);
                     
+                    //save the price in the local storage
+                    StorageService.storePrice(price)
                 }
                 default : {
                     EventEmitter.emit('log' , {
