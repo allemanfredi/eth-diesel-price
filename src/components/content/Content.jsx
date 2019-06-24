@@ -3,6 +3,8 @@ import Loader from '../loader/Loader';
 import Alert from '../alert/Alert';
 import LineChart from '../lineChart/LineChart';
 import EventLog from '../eventLog/EventLog';
+import { convertDate } from '../../utils/utils';
+
 
 class Content extends Component {
 
@@ -16,7 +18,7 @@ class Content extends Component {
         return (
             <div className="container">
                 <div className="row h-100 justify-content-center align-items-center">
-                    <div className="col-12 col-md-10  text-center">
+                    <div className="col-12 col-md-12  text-center">
                         <div className="card mt-5 container">
 
                             <div className="row mt-3">
@@ -47,11 +49,12 @@ class Content extends Component {
                             <hr/>
 
                             <div className="row mt-3">
-                                <div className="col-12 col-lg-6">
+                                <div className="col-12 col-lg-6 mb-3">
                                     <div className="text-left mb-3 fw-bold">Chart</div>
-                                    <LineChart data={this.props.prices.map( obj => obj.price)}/>
+                                    <LineChart data={this.props.prices.map( obj => obj.price)}
+                                               labels={this.props.prices.map( obj => convertDate(obj.date))}/>
                                 </div>
-                                <div className="col-12 col-lg-6">
+                                <div className="col-12 col-lg-6 mb-3">
                                 <   div className="text-left mb-3 fw-bold">Logs</div>
                                     <EventLog logs={this.props.logs}/>
                                 </div>

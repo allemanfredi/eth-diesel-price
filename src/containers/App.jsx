@@ -11,7 +11,7 @@ class App extends Component{
     super();
 
     this.startUpdatePrice = this.startUpdatePrice.bind(this);
-    this.registerListenerUpdatePrice = this.registerListenerUpdatePrice.bind(this);
+    this.registerListeners = this.registerListeners.bind(this);
     this.updatePrice = this.updatePrice.bind(this);
 
     this.dieselPrice = new DieselPrice();
@@ -27,8 +27,10 @@ class App extends Component{
   async componentWillMount(){
 
     try{
+      
+      this.registerListeners();
       await this.dieselPrice.init();
-      this.registerListenerUpdatePrice();
+
     }catch(err){
       this.setState({error: err.message});
     }
@@ -46,7 +48,7 @@ class App extends Component{
     this.dieselPrice.update();
   }
 
-  registerListenerUpdatePrice(){
+  registerListeners(){
     EventEmitter.on('price', price => this.updatePrice(price));
     EventEmitter.on('log', log =>  this.setState(prevState => { return {logs : [...prevState.logs , log]}}));
     EventEmitter.on('error', error => this.setState({error , isLoading:false}));
@@ -55,7 +57,7 @@ class App extends Component{
   updatePrice(price){
     this.setState(prevState => {
       return {
-        prices : [...prevState.prices, price],
+        prices : prevState.prices.length > 0 ? [...prevState.prices, price] : [...prevState.prices, price ],
         isLoading : false
       }
     });

@@ -1,4 +1,6 @@
-module.exports.convertDate = date => {
+module.exports.convertDate = d => {
+
+    const date = new Date(d);
     const todate = date.getDate();
     const tomonth = date.getMonth() + 1;
     const toyear = date.getFullYear();

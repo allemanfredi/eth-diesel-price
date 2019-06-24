@@ -75,6 +75,7 @@ class DieselPrice {
                         price : parseFloat(e.returnValues.price),
                         date : new Date(block.timestamp * 1000)
                     });
+                    
                 }
                 default : {
                     EventEmitter.emit('log' , {
