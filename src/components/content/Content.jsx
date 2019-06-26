@@ -35,7 +35,7 @@ class Content extends Component {
                                     Last update:
                                 </div>
                                 <div className="col-12 col-sm-9 text-center text-sm-right fw-bold">
-                                    {this.props.prices[this.props.prices.length - 1] ? this.props.prices[this.props.prices.length - 1].date : '-' } 
+                                    {this.props.prices[this.props.prices.length - 1] ? this.props.prices[this.props.prices.length - 1].date.toString() : '-' } 
                                 </div>
                             </div>
 
@@ -49,12 +49,12 @@ class Content extends Component {
                             <hr/>
 
                             <div className="row mt-3">
-                                <div className="col-12 col-lg-7 mb-3">
+                                <div className="col-12 col-lg-12 mb-3">
                                     <div className="text-left mb-3 fw-bold">Chart</div>
                                     <LineChart data={this.props.prices.map( obj => obj.price)}
                                                labels={this.props.prices.map( obj => convertDate(obj.date))}/>
                                 </div>
-                                <div className="col-12 col-lg-5 mb-3">
+                                <div className="col-12 col-lg-12 mb-3">
                                 <   div className="text-left mb-3 fw-bold">Logs</div>
                                     <EventLog logs={this.props.logs}/>
                                 </div>

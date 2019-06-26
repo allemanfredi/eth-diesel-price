@@ -56,8 +56,12 @@ class App extends Component{
 
   updatePrices(prices){
     this.setState(prevState => {
+
+      //ordering needed since can arrive a date of a price that is between 2 date already set
+      const newPrices = [...prevState.prices, ...prices].sort( (a , b) => new Date(a.date) - new Date(b.date))
+      
       return {
-        prices : [...prevState.prices, ...prices] ,
+        prices : newPrices ,
         isLoading : false
       }
     });

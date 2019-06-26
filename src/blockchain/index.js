@@ -2,6 +2,7 @@ import  Web3 from 'web3';
 import { EventEmitter } from '../utils/EventEmitter';
 import StorageService from '../utils/StorageService';
 
+
 //dieselPrice contract interface built with truffle
 import DieselPriceContract from './build/contracts/DieselPrice';
 
@@ -14,6 +15,8 @@ class DieselPrice {
         this.dieselPriceContract = null;
         this.currentAccount = null;
         this.contractAddress = '0xdF72d651D999c89d8AC31a12Fe652CeB6C8380FD';
+        this.currentBlockNumber = 0;
+        this.defaultBlockNumber = 11753766; //smart contract deployment block height
     }
 
     async init() {
@@ -38,6 +41,11 @@ class DieselPrice {
             this.dieselPriceContract = new this.web3.eth.Contract(DieselPriceContract.abi,this.contractAddress, {
                 defaultAccount: this.currentAccount, // default from address
             });
+
+            //get current blockNumber
+            this.currentBlockNumber = StorageService.getBlockNumber();
+            if (!this.currentBlockNumber)
+                this.currentBlockNumber = 0;
             
             //event listeners
             this.registerEventsListener();
@@ -70,32 +78,39 @@ class DieselPrice {
 
     registerEventsListener() {
         
-        this.dieselPriceContract.events.allEvents()
+        this.dieselPriceContract.events.LogNewDieselPrice({fromBlock: this.currentBlockNumber === 0 ? this.defaultBlockNumber : this.currentBlockNumber + 1, toBlock:'latest'})
         .on('data', async e => {
 
+            //get block in order to get the block timestamp
+            const block = await this.web3.eth.getBlock(e.blockNumber);
+            
+            //events can arrive not ordered because of getBlock => price are ordered in the front end
+            if ( e.blockNumber > this.currentBlockNumber ){ 
+                this.currentBlockNumber = e.blockNumber;
+                StorageService.storeBlockNumber(e.blockNumber);
+            }
+
+            const price = {
+                price : parseFloat(e.returnValues.price),
+                date : new Date(block.timestamp * 1000)
+            }
+
+            EventEmitter.emit('prices' , [price]);
+            
+            //save the price and blockNumber in the local storage
+            StorageService.storePrice(price);
+        });
+
+        this.dieselPriceContract.events.LogNewOraclizeQuery()
+        .on('data', async e => {
+
+            //get block in order to get the block timestamp
             const block = await this.web3.eth.getBlock(e.blockNumber);
 
-            switch(e.event){
-                case 'LogNewDieselPrice' : {
-
-                    const price = {
-                        price : parseFloat(e.returnValues.price),
-                        date : Date(block.timestamp * 1000).toString()
-                    }
-                    EventEmitter.emit('prices' , [price]);
-                    
-                    //save the price in the local storage
-                    StorageService.storePrice(price)
-                }
-                default : {
-                    EventEmitter.emit('log' , {
-                        value : e.returnValues[0],
-                        date : Date(block.timestamp * 1000).toString()
-                    })
-                }
-                //"break" not intentionally set so that a price event log is generated as well
-
-            }
+            EventEmitter.emit('log' , {
+                value : e.returnValues[0],
+                date : new Date(block.timestamp * 1000)
+            })
         })
     }
 
